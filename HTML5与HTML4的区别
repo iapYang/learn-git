@@ -1,0 +1,151 @@
+HTML5与HTML4的区别
+1	简介
+1.1	文档范围
+本文档覆盖W3C的HTML5标准，它不包含W3C HTML5.1标准或WHATWG HTML标准。
+1.2	向后兼容
+HTML5是这样被定义的：能向后兼容目前UA处理内容的方式。为了让语言更简单，一些老的元素和Attribute被舍弃。比如一些纯粹用于展现的元素或Attribute被舍弃，因为他们更适合用CSS来处理。
+但UA依然可以支持老旧的属性和元素。这就是为什么HTML5标准清楚地划分了给开发的要求和给UA的要求。比如，开发者不应当使用plaintext元素，但UA需要兼容plaintext元素。
+既然HTML5已区分对UA和对开发者的要求，再也不需将一些特性标记为deprecated（不赞成使用）了。
+2	语法
+HTML5定义了HTML5语法，日前已广泛兼容于网络上HTML4和XHTML1的文档，但不兼容大部分HTML4中的深奥SGML特性，大部分UA都不支持它们，比如处理指令 (processing instructions) 和标签简写 (shorthand markup)。
+HTML5语法中同时定义了解析规则——包括异常的处理方式。这种解析规则能够广泛支持HTML4领域的实现，UA可以使用这些规则来解析媒体类型为text/html的资源。
+另外一个可以被用于HTML的语法是XML。XML语法可兼容于XHTML文档或实现。使用XML语法的文档需要配套XML文档的媒体类型如application/xhtml+xml或application/xml来使用，同时，元素需要遵循XML规则，被放到http://www.w3.org/1999/xhtml命名空间中。
+2.1	符号编码
+HTML标准中要求开发声明编码方式，有这些方式可以做到：
+（1）传输层，可以用HTTP头部的Content-Type。
+（2）在文档头部放置对应使用的编码的BOM。
+（3）使用有charset的meta元素。比如<meta charset="UTF-8">可以用于声明UTF-8编码。这个新声明替代了<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">，尽管后者依然可以使用。
+XML语法中，开发需要按照XML标准来设置编码。
+2.2	Doctype
+HTML5语法要求声明Doctype，以确保浏览器以标准模式渲染页面。Doctype没有其他用途。
+HTML5语法中的Doctype声明为<!DOCTYPE html>，不区分大小写。
+之前HTML4标准中的Doctype更长，因为HTML4语法是基于SGML的，需要引用DTD。而在新的HTML5标准中，再也不需要引用DTD了（译注：因为HTML5不再基于SGML）。因此，doctype只是为了确保文档以标准模式渲染。
+为了支持旧有的标签，可以使用<!DOCTYPE html SYSTEM "about:legacy-compat">作为Doctype声明。
+HTML4.0、HTML 4.01、XHTML 1.0、XHTML 1.1之类严格的Doctype，在HTML5中可以使用，但不被提倡。
+在XML语法中，可以使用任何Doctype声明或省略Doctype。使用XML媒体类型的文档永远会在标准模式中被解析。
+2.3	MathML和SVG
+HTML语法允许文档内嵌MathML和SVG元素。
+math和svg的开始标签将会导致HTML解析器转为特殊的插入模式，以将元素和属性放入合适的命名空间，并转化大小写，并支持XML中的空元素语法。
+HTML中的math/svg的相关元素及其属性依然是区分大小写的。
+可以省略namespace。
+在这个特殊的插入模式里，可以使用CDATA语法。
+一些MathML和SVG元素可能导致解析器转回HTML解析模式，比如mtext和foreignObject，在这些元素内部你可以使用HTML元素或者新的math/svg元素。
+2.4	其它方面
+字符实体&lang;和&rang;分别代表U+27E8和U+27E9（数学意义上的左右尖括号〈、〉），而非U+2329和U+232A（尖括号的旧有表示方法〈、 〉）。
+一些新的字符实体被加入，包括在MathML中定义的全部字符实体。
+空元素（如br）允许有一个结尾反斜杠（trailing slash）。
+相较于HTML4，HTML5中的&在更多场景下不转义。
+属性需要起码一个空格字符来区隔开。
+有空值的属性等价于属性与值完全相同的情形，即使这个属性并非boolean属性。
+相较于HTML4，HTML5中省略了引号的属性值允许使用更大范围的字符集。
+HTML解析器不再对属性值中间出现的空格进行标准化，比如<input id=" a ">中的id不再有效，同时<input value="">中的value中的空行字符可以被使用，而不需要使用实体来替代。
+optgroup结束标签可选填。
+colgroup开始标签可选填，HTML解析器会根据上下文补完。
+3	语言
+3.1	新标签
+以下标签的引入是为了用于更好的文档结构：
+section代表一般意义上的文档/app区块，它应当与h1~h6等元素搭配使用，以标示文档层级。
+article代表了独立于文档的一块内容，比如blog入口或报刊文章。
+main代表了文档/app的主体内容。
+aside代表了一些与页面其它部分关联性不那么大的内容。
+header代表了一组介绍性或导航性质的辅助内容。
+footer代表了一个区块的底部，可以包含作者、版权等信息。
+nav代表了文档中可以导航的区块。
+figure代表了代表了一个独立的内容流。
+figcaption可以用作内容流的标题。
+template可以用于声明一块可用于克隆与插入的HTML片段。
+其它的新标签：
+audio和video代表了多媒体元素，它们也提供了相应的API用于开发者定制UI，同时也提供了触发UA展示其默认控件的方式。
+source元素跟他们一同使用，用于有多类型的内容流的情形。
+track提供了audio的文本轨道（译注：包含字幕等）。
+embed用于插件内容。
+mark代表了一个文档中需要标记或高亮的引用部分。
+progress代表了一个任务的完成程度。
+meter代表了一个度量，比如对磁盘空间的度量。
+time代表了时间/日期。
+ruby、rt、rp为ruby表达式。
+bdi代表了一段隔绝于周围元素的双向书写文本格式。
+wbr代表了可能断行的部分。
+canvas用于渲染动态位图。
+datalist与input的list属性共同使用，可以用于创建下拉选择框控件。
+keygen代表生成的密钥对。
+output代表了一种输出内容。
+3.2	新属性
+许多元素在HTML4中已经介绍过了：
+area元素同a和link元素一样有了新的hreflang、type、rel属性。
+base元素同a一样可以有target属性。
+meta元素有了charset属性。
+非type="hidden"的input、select、textarea、button可使用autofocus元素来制定自动获得焦点的元素。
+input、textarea元素可使用placeholder属性来帮助用户填写数据，注意，它不应当替代label元素的作用。
+form属性可用于在input、output、select、textarea、button、label、object、fieldset元素上指定关联的<form>元素的id，不局限于常规的层叠关系。
+fieldset标签允许使用disabled属性，这将禁止所有子元素的交互；它同时还可以使用name以方便脚本获取。
+input的type属性有了更多新值：tel、search、url、email、date、time、number、range、color。
+input与textarea元素有了dirname以指明书写方向（译注：ltr或rtl）。
+textarea元素有了新的属性，如maxlength、minlength、wrap来控制最大输入长度与提交时的断行行为。
+form元素有了novalidate属性来禁止默认的表单验证行为。
+input与button元素有了formaction, formenctype, formmethod, formnovalidate与formtarget属性，用于覆盖继承自form的action, enctype, method, novalidate及target属性。
+input元素有了minlength和maxlength属性。
+script元素有了async属性将影响脚本的加载与运行。
+html元素有manifest属性，可用于指定缓存行为。
+link元素有了新的属性sizes，可以指定不同的大小的favicon。
+ol元素有了新的属性reversed，它代表着列表的顺序是逆序的。
+iframe元素有了sandbox和srcdoc属性以支持沙盒安全保护。
+object元素有了typemustmatch元素以保证更安全的嵌入顺序。
+img元素有crossorigin属性以在canvas中支持CORS。
+HTML4中有一些全部标签都可以使用的属性，在HTML5中叫做全局属性，如：accesskey , class, dir, id, lang, style, tabindex 及title。此外，XHTML 1.0仅允许一些标签上的xml:space属性设置。
+有这些新的全局属性：
+Contenteditable说明此元素是可编辑的。用户可操作和标记。
+data-*代表了开发定制的属性，这种格式可以避免与将来的新HTML属性冲突。
+hidden属性代表一个元素不再与文档相关。
+role及aria-*用于支持无障碍访问。
+spellcheck用于指定内容是否允许进行拼写检查。
+translate用于指定内容是否应当翻译。
+3.3	修改的标签
+这些元素在HTML中被稍微修改了，用来更好地让它们在网络上使用并使它们更加有用：
+address元素的范围现已由最近的祖先article/body元素决定，代表了后者的联系信息。
+b元素现在表示一段加强表示的文本，但并不表达额外的重要性、暗示需要加重的语气和声调(译注：与em的语义区分开来)。比如文档摘要里的关键字、产品评价里的产品名字、可以与之交互的文本等等。
+blockquote元素依然表示从另外一个来源里摘录的内容，但现在允许包含footer或cite元素。
+dl元素现在代表了有关联的命名-值的列表，但不再适用于对话了。
+hr元素代表了段与段之间的主题意义上的区隔（译注：即暗示段落主题已经发生了变化）。
+i元素现在代表了一段需要使用不同的语气或声调的文本，或代表了不同品类的文本，如分类学名称、科技术语、其他语言中的方言或俚语等等。
+s元素代表了不再准确/相关的元素。
+script标签可以被用于自定义数据块。
+small元素代表了旁注，如免责声明、注意事项、法律限制或版权声明。
+strong元素代表了重要性，而非着重强调。
+4	内容模型
+内容模型即元素的嵌套规则。
+内容模型层面，HTML4有这些混乱的规则：
+有两个大类"inline"和"block-level"元素，有一些元素不属于任何一个类别。
+有一些元素允许嵌套inline元素(如p)；有些允许嵌套block-level元素(如body)；有些都允许(如div)；
+然而一些元素不根据类别、而仅仅允许嵌套特定元素(如table dl)；或完全不允许嵌套元素
+一个元素可能在一个类别中，而内容模型却在另外一个类别中。比如p属于block-level，但内容模型为inline。
+更加让人混淆的是，针对HTML4的不一样的DTD声明——Strict、Transitional或Frameset——有不一样的内容模型。
+比如Strict下body元素仅仅允许嵌套block-level元素，但在Transitional下，body元素两种元素都允许嵌套。
+CSS的视觉格式化模型中也存在"block-level element"和"inline-level element"的区分，它跟CSS中的display属性相关，同时没有跟HTML的内容模型有任何关联。
+HTML5的内容模型不再使用"inline"和"block-level"的方式区分元素，为避免与CSS类似概念的混淆。然而，比起HTML4，它增加了更多类别，一个元素可以属于任意个数的类别。
+HTML5中划分出来的类别如下：
+Metadata，如link、script。
+Flow，如span、div、文本节点。它接近于HTML4层面的block-level和inline的混合。
+Sectioning，如aside、section。
+Heading，如h1。
+Phrasing，如span、img、文本节点。它接近于HTML4的inline概念。
+Embedded，如img、iframe、svg。
+Interactive，如a、button、label。
+与HTML4有很大不一样的一点是，HTML5中不再出现仅仅允许嵌套"block-level"的类别了（译注：因为HTML5已经不存在"block-level"类别的标签了）。
+比如，body允许Flow类别的内容。这个规则比起HTML4 Strict，它更接近HTML4 Transitional。
+更多变化包括：
+address元素允许嵌套Flow类别的标签，但不允许嵌套Heading、Section类别的元素，不允许嵌套header、footer、另一个address。
+HTML4允许object出现在head内部，但HTML5不允许。
+noscript元素由block-level类别转为Phrasing类别。
+table, thead, tbody, tfoot, tr, ol, ul及dl元素允许为空。
+表格元素需要遵从表格模型。比如两个单元格不允许交叠。
+table元素允许tfoot元素作为它的最后一个子元素。
+caption元素允许嵌套Flow类别的元素，但不允许嵌套table元素。
+th元素允许嵌套Flow类别的元素，但不允许嵌套header元素、footer元素、Sectioning类别或Heading类别的元素。
+a的内容模型为transparent，它与它的父级拥有同样的内容模型，这意味着在a的父级允许Flow类别的子元素的时候，a可以嵌套div元素。
+此外，它不允许嵌套Interactive类别的元素。
+ins和del元素的内容模型为transparent。
+HTML4有类似的规则，但无法在DTD中表达出。在object元素的param子元素以后，内容模型为transparent。
+object对象也有透明属性模型，在after属性里添加param属性。
+map元素的内容模型为transparent。当有一个map作为祖先节点的时候，area元素被当作Phrasing类别的元素，同时area不再需要成为map的直接子节点
+legend元素不再是fieldset必须的子节点了
